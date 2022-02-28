@@ -17,11 +17,11 @@
       ```js 
            Token = await ethers.getContractFactory("Token");    //Token相当于合约本体
            const hardhatToken = await Token.deploy();          //合约部署完，harddatToken就是合约的方法集合体
-     
+        
             //解释 ethers.js中的ContractFactory是用于部署新智能合约的抽象，
             //因此此处的Token是用来实例代币合约的工厂。
             // 在ContractFactory上调用deploy()将启动部署，并返回解析为Contract的Promise。 
- 
+       
       ```
 ---
 02.24
@@ -38,22 +38,18 @@
 
 
 
-<br/>      
-<br/>
-<br/>
-<br/>
 
 
 ####  hardhat网络的使用
 - 1 ：运行节点 ：
     ```js
     npx hardhat node
-    ``` 
+    ```
 - 2 ：部署脚本（理解为部署合约），在这种情况下，如果不使用--network 
-参数来运行它，则代码将再次部署在Hardhat network 上，因此，
-当Hardhat network 关闭后，部署实际上会丢失，但是它用来测试
-我们的部署代码时仍然有用,要部署到诸如主网或任何测试网之类的线上网络，你需要在hardhat.config.js 文件中添加一个network条目
+  参数来运行它，则代码将再次部署在Hardhat network 上，因此，
+  当Hardhat network 关闭后，部署实际上会丢失，但是它用来测试
+  我们的部署代码时仍然有用,要部署到诸如主网或任何测试网之类的线上网络，你需要在hardhat.config.js 文件中添加一个network条目
     ```js
-    npx hardhat run scripts/deploy.js --network <network-name>
+    npx hardhat run script/deploy.js --network <network-name>
     ```
 - 3 : hardhat节点关闭，本地部署的也消失
