@@ -1,13 +1,26 @@
-## 学习中的问题：
+## Hardhat配置与相关问题：
+
+
+
+
 
 ###  目前问题
-* !locked!
-*  abi 二进制接口的意义用法   大概解决
-*  事件的watch
+
+* !locked!                           等待用的时候解决    
+*  abi 二进制接口的意义用法   ==已经解决==
+*  事件的watch                     等待用的时候解决  
 
 
 
-####  函数知识
+###  需要记得一些语法点
+
+-   ...[..]  传入参数的时候进行解构赋值
+- 
+
+
+
+### 函数知识
+
 02.23
 -  1.  const [owner,addr1,addr2...] = await ethers.getSigners()   ---------  //这个函数是返回20个账户
     ethers.js中的Signer 代表以太坊账户对象。 它用于将交易发送到合约和其他帐户。 
@@ -30,21 +43,19 @@
 
 
 - 部署合约：
-  - 需要在合约初始化传入参数的时候，在部署合约的时候填入参数
-  - 
+  - 需要在合约初始化传入参数的时候，在部署合约的时候填入参数,需要参数的话在部署合约的时候传入。
+  
+    
 
 
 
+### Hardat的运行
 
-
-
-
-
-####  hardhat网络的使用
 - 1 ：运行节点 ：
     ```js
     npx hardhat node
     ```
+    
 - 2 ：部署脚本（理解为部署合约），在这种情况下，如果不使用--network 
   参数来运行它，则代码将再次部署在Hardhat network 上，因此，
   当Hardhat network 关闭后，部署实际上会丢失，但是它用来测试
@@ -52,4 +63,156 @@
     ```js
     npx hardhat run scripts/deploy.js --network <network-name>
     ```
+  
 - 3 : hardhat节点关闭，本地部署的也消失
+
+
+
+
+
+
+
+
+
+###Hardat的部署脚本基本代码
+
+
+
+####  1.deploy.js
+
+
+
+- 02.28
+
+```js
+//引入包
+const { ethers, network } = require("hardhat");
+const { writeAddr } = require('./artifact_log.js');
+
+async function main() {
+  
+  //获取签名器
+  let [owner] = await ethers.getSigners();
+  console.log(owner.address)
+  console.log(await owner.getAddress())
+
+  let name = 'MyNft';
+  let params = ['MyNft', "MN"];
+  
+  //获得合约工厂，包含各种方法
+  const MyNft = await ethers.getContractFactory(name);
+   
+  //解构赋值，相当于拆包，传入俩个或者多个参数
+  const Mynft = await MyNft.deploy(...params); 
+  
+  let   nft   = await Mynft.deployed();          
+  await writeAddr(nft.address, "MyNft");
+  //console.log(`${name} deployed to:      ${contract.address.toLowerCase()}`);
+  //tolowercase是啥
+  console.log(`${name} address:`,Mynft.address);
+  console.log("-------------------------------------------------");
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+
+
+```
+
+
+
+
+
+####   2.需要引入的artifact_log.js
+
+
+
+- 02.28
+
+```js
+const { network } = require("hardhat");
+
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
+
+const writeFile = util.promisify(fs.writeFile);
+/**
+ * 记录合约发布地址
+ * @param {*} deployments json
+ * @param {*} name 类型
+ */
+async function writeAddr(addr, name){
+
+  const chainid = network.config.chainId;
+  const saveDir = path.resolve(__dirname, `../deployments/${chainid}/`);
+
+  if (!fs.existsSync(saveDir)) {
+    fs.mkdirSync(saveDir);
+  }
+  
+  const deploymentPath = saveDir + `/${name}.json`; 
+
+  const deployments = {};
+  deployments["address"] = addr;
+
+  await writeFile(deploymentPath, JSON.stringify(deployments, null, 2));
+  console.log(`Exported deployments into ${deploymentPath}`);
+
+}
+
+module.exports = {
+
+  writeAddr
+  
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
