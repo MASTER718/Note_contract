@@ -11,8 +11,8 @@
 02.23
 -  1.  const [owner,addr1,addr2...] = await ethers.getSigners()   ---------  //这个函数是返回20个账户
     ethers.js中的Signer 代表以太坊账户对象。 它用于将交易发送到合约和其他帐户。 
-    在这里，我们获得了所连接节点中的帐户列表，在本例中节点为Hardhat Network，
-    并且仅保留第一、二、三个帐户
+     在这里，我们获得了所连接节点中的帐户列表，在本例中节点为Hardhat Network，
+     并且仅保留第一、二、三个帐户
 - 2. 
       ```js 
            Token = await ethers.getContractFactory("Token");    //Token相当于合约本体
@@ -50,6 +50,6 @@
   当Hardhat network 关闭后，部署实际上会丢失，但是它用来测试
   我们的部署代码时仍然有用,要部署到诸如主网或任何测试网之类的线上网络，你需要在hardhat.config.js 文件中添加一个network条目
     ```js
-    npx hardhat run script/deploy.js --network <network-name>
+    npx hardhat run scripts/deploy.js --network <network-name>
     ```
 - 3 : hardhat节点关闭，本地部署的也消失

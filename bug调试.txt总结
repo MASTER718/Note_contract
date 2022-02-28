@@ -1,0 +1,6 @@
+1、vue中：
+Cannot read properties of undefined (reading 'getApproved')
+---说明是 ...的属性（getApproved）读不到 ...是undefined  检查...是不是有问题
+
+1. 通过console.log()打印 
+2. 很可能是英文字母输错了
