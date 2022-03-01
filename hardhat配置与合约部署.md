@@ -15,7 +15,7 @@
 ###  需要记得一些语法点
 
 -   ...[..]  传入参数的时候进行解构赋值
-- 
+- java中都是对象，错的语法可以从这个角度思考
 
 
 
@@ -24,8 +24,8 @@
 02.23
 -  1.  const [owner,addr1,addr2...] = await ethers.getSigners()   ---------  //这个函数是返回20个账户
     ethers.js中的Signer 代表以太坊账户对象。 它用于将交易发送到合约和其他帐户。 
-     在这里，我们获得了所连接节点中的帐户列表，在本例中节点为Hardhat Network，
-     并且仅保留第一、二、三个帐户
+       在这里，我们获得了所连接节点中的帐户列表，在本例中节点为Hardhat Network，
+       并且仅保留第一、二、三个帐户
 - 2. 
       ```js 
            Token = await ethers.getContractFactory("Token");    //Token相当于合约本体
@@ -135,7 +135,6 @@ main()
 
 ```js
 const { network } = require("hardhat");
-
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
@@ -160,6 +159,7 @@ async function writeAddr(addr, name){
   const deployments = {};
   deployments["address"] = addr;
 
+ //json.stringify()用法见下
   await writeFile(deploymentPath, JSON.stringify(deployments, null, 2));
   console.log(`Exported deployments into ${deploymentPath}`);
 
@@ -169,10 +169,44 @@ module.exports = {
 
   writeAddr
   
-}
+} 
 ```
 
 
+
+#####   1.fs、path的部分用法解释
+
+-  fs 的部分用法
+
+  - fs.appendFile   ----创建文件
+
+  - fs.readFile(....<表示文件路径和名称>，<回调函数>(err,data)=>{   })    ----- 参考用法
+
+  - fs.unlink          ----删除文件
+
+  - fs.mkdir          ----创建文件夹
+
+  - fs.readir         ----读取目录下的文件及文件夹
+
+  - fs.rmdir          ----删除空目录
+
+  - 
+
+    
+
+
+
+
+
+
+
+#####   2.json.stringify()的用法
+
+- json.stringify()包含三个参数
+  - 第一个是json对象，表示将它转换为字符串输出
+  - 第二个为[]或者单个key([]里面是多个key)，表示输出我们想要的东西，相当于筛选条件
+    - 如果第二个是函数，执行即可
+  - 第三个参数为字符串或数值时，字符串会以该字符向前填充
 
 
 
