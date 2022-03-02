@@ -16,6 +16,8 @@
 
 -   ...[..]  传入参数的时候进行解构赋值
 - java中都是对象，错的语法可以从这个角度思考
+- js只有一个执行线程
+- nodejs中_dirname总是指向被执行js文件的绝对路径，引入文件是路径为相对路径
 
 
 
@@ -157,7 +159,8 @@ async function writeAddr(addr, name){
   const deploymentPath = saveDir + `/${name}.json`; 
 
   const deployments = {};
-  deployments["address"] = addr;
+  deployments["address"] = addr;    //添加键值对
+  //下面将这个对象转换为json字符串存储起来，便于读取
 
  //json.stringify()用法见下
   await writeFile(deploymentPath, JSON.stringify(deployments, null, 2));
@@ -174,9 +177,11 @@ module.exports = {
 
 
 
-#####   1.fs、path的部分用法解释
+#####   1.fs、path、util的部分用法解释
 
 -  fs 的部分用法
+
+  ​     -----标准的异步读法,==内含回调函数==-----
 
   - fs.appendFile   ----创建文件
 
@@ -190,17 +195,59 @@ module.exports = {
 
   - fs.rmdir          ----删除空目录
 
+     ------同步读法，不含回调函数-----
+  
+  - 加入Sync后缀
+
+
+
+- path的涉及函数
+
+  - fs.resolve([from...],to)
+
+    ```js
+    //从源地址到目的地址的绝对路劲，类似在shell中执行一系列的cd命令
+    --例子1
+    path.resolve('foo/bar', '/tmp/file/', '..', 'a/../subfile')
+    类似于：
+    cd foo/bar
+    cd /tmp/file/
+    cd ..
+    cd a/../subfile
+    pwd
+    
+    path.resolve(".")   //'.'或者'./'令是对于自己的工作目录，也就是node命令的目录
+    ```
+
+
+
+- util的涉及函数解释
   - 
 
-    
 
 
 
 
+-  在读取二进制文件的时候，==Node.js中，Buffer对象就是一个包括一个零个或任意个字节的数组。==
 
+  - buffer =>string   
 
+  - string =>buffer  
 
-#####   2.json.stringify()的用法
+      ```js
+      //buffer => string
+      var text = data.toString('utf-8')
+      
+      //string => buffer  
+      //buf1是字符串
+      var buf  = Buffer.from(buf1,'utf-8')
+      
+      
+      ```
+
+​       
+
+#####   2.json.stringify()的用法  —— 输出json字符串
 
 - json.stringify()包含三个参数
   - 第一个是json对象，表示将它转换为字符串输出
