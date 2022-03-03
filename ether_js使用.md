@@ -76,43 +76,7 @@ this.signer = new ethers.providers.Web3Provider(this.provider).getSigner() //获
 const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
 const abi = require(`../../deployments/abi/${ContractName}.json`);
 
-
-
-
-
-
-
-
-
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -121,11 +85,8 @@ const abi = require(`../../deployments/abi/${ContractName}.json`);
 ES6js引入ethers
 import {ethers}  from 'ethers';
 
-
-
-
 this.provider = window.ethereum                              //获取当前网络节点
-this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()   //连接metamask的节点 //连接当前签名器   **对区块链进行写操作时需要连接钱包签名**
+this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()   //连接metamask的节点 //连接当前签名器   对区块链进行写操作时需要连接钱包签名
 
 
 
@@ -134,34 +95,6 @@ this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()   //�
 
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -173,4 +106,24 @@ this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()   //�
 - 得到节点方法：
   -    this.provider = window.ethereum;   ？方法哪里来的  -> 从前端的属性中得到 //得到网络节点
 - 签名器： this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()   //连接metamask的节点 //连接当前签名器   **对区块链进行写操作时需要连接钱包签名**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

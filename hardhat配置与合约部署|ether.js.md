@@ -1,18 +1,20 @@
+
+
 ## Hardhat配置与相关问题：
 
 
 
-
-
-###  目前问题
+###   1.目前问题
 
 * !locked!                           等待用的时候解决    
 *  abi 二进制接口的意义用法   ==已经解决==
 *  事件的watch                     等待用的时候解决  
+*  ethers.utils                      ==已经解决==  -- ethers里的一个工具包，详细看手册
+*  nodejs中的util                         待解决
 
 
 
-###  需要记得一些语法点
+###  2.需要记得一些语法点
 
 -   ...[..]  传入参数的时候进行解构赋值
 - java中都是对象，错的语法可以从这个角度思考
@@ -21,7 +23,7 @@
 
 
 
-### 函数知识
+### 3.函数知识
 
 02.23
 -  1.  const [owner,addr1,addr2...] = await ethers.getSigners()   ---------  //这个函数是返回20个账户
@@ -51,7 +53,7 @@
 
 
 
-### Hardat的运行
+### 4.Hardat的运行
 
 - 1 ：运行节点 ：
     ```js
@@ -72,11 +74,7 @@
 
 
 
-
-
-
-
-###Hardat的部署脚本基本代码
+###5.Hardat的部署脚本基本代码(重要)
 
 
 
@@ -206,7 +204,7 @@ module.exports = {
   - fs.resolve([from...],to)
 
     ```js
-    //从源地址到目的地址的绝对路劲，类似在shell中执行一系列的cd命令
+    //从源地址到目的地址的绝对路径，类似在shell中执行一系列的cd命令，就是得到一个绝对路径
     --例子1
     path.resolve('foo/bar', '/tmp/file/', '..', 'a/../subfile')
     类似于：
@@ -236,6 +234,7 @@ module.exports = {
 
       ```js
       //buffer => string
+      //data - 字符串
       var text = data.toString('utf-8')
       
       //string => buffer  
@@ -254,6 +253,139 @@ module.exports = {
   - 第二个为[]或者单个key([]里面是多个key)，表示输出我们想要的东西，相当于筛选条件
     - 如果第二个是函数，执行即可
   - 第三个参数为字符串或数值时，字符串会以该字符向前填充
+
+
+
+
+
+#  ether.js/web3.js的使用方法
+
+## 注意：
+
+     - 读区块链数据不需要消耗gas
+     - 写区块链数据需要连接账户且消耗gas
+
+this.erc20_contarct = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+
+
+
+##  签名器和钱包 （2-4）
+
+
+
+####    1. 钱包与签名器与节点
+
++ 钱包的属性
+
+  -  .address    ......   //地址、助记词、签名方法等
+  -  各种方法     与链交互
+
++ 签名器：wallet就是签名器的一个继承实
+
+  > 使用方法
+  > -1   object . getAddress ( )  =>  Promise<Address>     返回一个可获取账号的Promise
+  >
+  > -2  还有发送交易和gas的其他方法
+
++ Provider
+
+  - Provider是一个连接以太网络的抽象
+
+  - >-- 连接已有的web3
+    >
+    >```js
+    >使用web3Provider时，自动检测网络
+    >let  currentProvider = new web3.providers.HttpProvider('http://localhost:8545');
+    >let web3Provider = new ethers.providers.Web3Provider(currentProvider);
+    >```
+    >
+    >-- Provider 的属性
+    >
+    >具体手册，获取网络状态和以太坊状态等......
+    >
+    >
+
+     
+
+####  2.代码形式Study：
+
+
+
+```js
+wallet 实现了Signer API 需要签名签名器可以使用Wallet，包含了签名器的所有属性
+
+---案例1
+<!---
+new Wallet ( privateKey [ , provider ] )
+从参数 privateKey 私钥创建一个钱包实例， 还可以提供一个可选的 提供者Provider 参数用于连接节点。
+--->
+//利用私钥产生一个钱包
+let privateKey = "0x0123456789012345678901234567890123456789012345678901234567890123";
+let wallet = new ethers.Wallet(privateKey);
+ //连接钱包到主网
+let provider = ethers.getDefaultProvider();
+let walletWithProvider = new ethers.Wallet(privateKey, provider);
+
+
+---案例2
+<!--
+使用节点和signer的实例代码
+-->
+
+-- 以部署合约为例
+
+前端交互
+this.provider = window.ethereum;                 // 得到当前的Provider
+this.accounts = await window.ethereum.enable()  //  获取
+this.signer = new ethers.providers.Web3Provider(this.provider).getSigner() //获取当前用户
+
+----得到合约的addr 与abi
+const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
+const abi = require(`../../deployments/abi/${ContractName}.json`);
+
+```
+
+一些注释：
+
+```js
+ES6js引入ethers
+import {ethers}  from 'ethers';
+
+this.provider = window.ethereum                              //获取当前网络节点
+this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()   //连接metamask的节点 //连接当前签名器   对区块链进行写操作时需要连接钱包签名
+
+```
+
+
+
+#### 3. 网络节点
+
+- provider：相当于连接以太坊网络的一个节点，用与查询以太坊网络状态或者发送更改状态的交易
+- 得到节点方法：
+  -    this.provider = window.ethereum;   ？方法哪里来的  -> 从前端的属性中得到 //得到网络节点
+- 签名器： this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()   //连接metamask的节点 //连接当前签名器   **对区块链进行写操作时需要连接钱包签名**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
